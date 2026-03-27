@@ -128,6 +128,13 @@ export default function Map({ selectedTypes }: MapProps) {
     }))
   }
 
+  const handlePhotoDelete = (locationId: number, photoIndex: number) => {
+    setPhotos((prev) => ({
+      ...prev,
+      [locationId]: prev[locationId]?.filter((_, i) => i !== photoIndex) || [],
+    }))
+  }
+
   const openPhotoModal = (location: Location) => {
     setSelectedLocation(location)
     setModalOpen(true)
@@ -207,6 +214,7 @@ export default function Map({ selectedTypes }: MapProps) {
           photos={photos[selectedLocation.id] || []}
           onClose={() => setModalOpen(false)}
           onPhotoAdd={handlePhotoAdd}
+          onPhotoDelete={handlePhotoDelete}
         />
       )}
     </>
