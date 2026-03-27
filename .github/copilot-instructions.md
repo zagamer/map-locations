@@ -1,0 +1,9 @@
+- [x] Verify that the copilot-instructions.md file in the .github directory is created.
+- [x] Clarify Project Requirements - Interactive map website with location filtering by type
+- [x] Scaffold the Project - Next.js with TypeScript and Tailwind CSS
+- [x] Customize the Project - Map component with Leaflet and location filtering
+- [x] Install Required Extensions - No additional extensions needed
+- [x] Compile the Project - Dependencies installed successfully
+- [x] Create and Run Task - Development server task configured in .vscode/tasks.json
+- [ ] Launch the Project - Start development server
+- [ ] Ensure Documentation is Complete - Verify README and instructions
