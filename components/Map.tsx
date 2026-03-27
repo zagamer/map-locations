@@ -1,8 +1,9 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import PhotoModal from './PhotoModal'
 
 interface Location {
   id: number
@@ -115,6 +116,22 @@ export default function Map({ selectedTypes }: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null)
   const map = useRef<L.Map | null>(null)
   const markersRef = useRef(new globalThis.Map<number, L.Marker>())
+  
+  const [photos, setPhotos] = useState<Record<number, string[]>>({})
+  const [modalOpen, setModalOpen] = useState(false)
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(null)
+
+  const handlePhotoAdd = (locationId: number, photoData: string) => {
+    setPhotos((prev) => ({
+      ...prev,
+      [locationId]: [...(prev[locationId] || []), photoData],
+    }))
+  }
+
+  const openPhotoModal = (location: Location) => {
+    setSelectedLocation(location)
+    setModalOpen(true)
+  }
 
   useEffect(() => {
     if (!mapContainer.current) return
@@ -139,13 +156,40 @@ export default function Map({ selectedTypes }: MapProps) {
         const marker = L.marker([location.lat, location.lng], {
           icon: createCustomIcon(location.type),
         })
-          .bindPopup(`
-            <div>
-              <h3 class="font-bold">${location.name}</h3>
-              <p class="text-sm text-gray-600">${location.type}</p>
-              <p class="text-sm">${location.description}</p>
-            </div>
-          `)
+          .bindPopup(() => {
+            const popupDiv = document.createElement('div')
+            popupDiv.innerHTML = `
+              <div style="min-width: 250px;">
+                <h3 style="font-weight: bold; margin-bottom: 8px; font-size: 16px;">${location.name}</h3>
+                <p style="margin: 4px 0; color: #666; font-size: 14px;"><strong>Type:</strong> ${location.type}</p>
+                <p style="margin: 4px 0; font-size: 14px;">${location.description}</p>
+                <p style="margin: 8px 0 0 0; font-size: 12px; color: #0066cc;"><strong>${photos[location.id]?.length || 0} photos</strong></p>
+              </div>
+            `
+            
+            const photoBtn = document.createElement('button')
+            photoBtn.textContent = '📷 Add Photo'
+            photoBtn.style.cssText = `
+              width: 100%;
+              margin-top: 12px;
+              padding: 8px 12px;
+              background-color: #0066cc;
+              color: white;
+              border: none;
+              border-radius: 4px;
+              cursor: pointer;
+              font-weight: 500;
+              font-size: 14px;
+            `
+            photoBtn.onmouseover = () => photoBtn.style.backgroundColor = '#0052a3'
+            photoBtn.onmouseout = () => photoBtn.style.backgroundColor = '#0066cc'
+            photoBtn.onclick = () => {
+              openPhotoModal(location)
+            }
+            
+            popupDiv.appendChild(photoBtn)
+            return popupDiv
+          })
           .addTo(map.current!)
 
         markersRef.current.set(location.id, marker)
@@ -153,5 +197,18 @@ export default function Map({ selectedTypes }: MapProps) {
     })
   }, [selectedTypes])
 
-  return <div ref={mapContainer} className="h-full w-full" />
+  return (
+    <>
+      <div ref={mapContainer} className="h-full w-full" />
+      {modalOpen && selectedLocation && (
+        <PhotoModal
+          locationId={selectedLocation.id}
+          locationName={selectedLocation.name}
+          photos={photos[selectedLocation.id] || []}
+          onClose={() => setModalOpen(false)}
+          onPhotoAdd={handlePhotoAdd}
+        />
+      )}
+    </>
+  )
 }
