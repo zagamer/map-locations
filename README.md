@@ -9,6 +9,8 @@ An interactive map application built with Next.js and Leaflet that allows users 
 - 🔍 Filter locations by type using checkboxes
 - 🎨 Color-coded markers for different location types
 - 📱 Responsive design with sidebar navigation
+- 🧭 Navigation tabs (Home, Map, Contact Us)
+- 🎨 Pink background with blue text styling
 - ⚡ Built with Next.js and TypeScript
 
 ## Getting Started
@@ -38,10 +40,13 @@ npm run dev
 ```
 ├── app/
 │   ├── layout.tsx          # Root layout
-│   ├── page.tsx            # Home page with filters
-│   └── globals.css         # Global styles
+│   ├── page.tsx            # Home page with tabs and navigation
+│   └── globals.css         # Global styles (pink background, blue text)
 ├── components/
+│   ├── Header.tsx          # Navigation header with tabs
 │   └── Map.tsx             # Map component with markers
+├── .github/
+│   └── copilot-instructions.md # Copilot instructions
 ├── package.json            # Dependencies
 ├── tsconfig.json           # TypeScript configuration
 ├── tailwind.config.ts      # Tailwind CSS configuration
@@ -50,10 +55,14 @@ npm run dev
 
 ## Usage
 
-1. The map displays all location types by default
-2. Use the checkboxes in the sidebar to show/hide specific location types
-3. Click on any marker to see location details in a popup
-4. Drag to pan, scroll to zoom on the map
+1. **Navigation**: Use the header tabs to navigate between Home, Map, and Contact Us pages
+2. **Home Page**: Welcome page with an option to explore the map
+3. **Map Page**: 
+   - All location types are displayed by default
+   - Use the checkboxes in the sidebar to filter specific location types
+   - Click on any marker to see location details in a popup
+   - Drag to pan, scroll to zoom on the map
+4. **Contact Us**: View contact information
 
 ## Technologies Used
 
